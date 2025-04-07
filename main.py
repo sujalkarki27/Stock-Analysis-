@@ -88,6 +88,26 @@ plt.title('Outliers vs Non-Outliers')
 plt.axis('equal')
 plt.show()
 
+# ----------------------------------------
+# Box Plot BEFORE Removing Outliers
+# ----------------------------------------
+plt.figure(figsize=(10, 5))
+sns.boxplot(data=data, orient='h', palette='Set2')
+plt.title("Box Plot - Before Removing Outliers")
+plt.xlabel("Values")
+plt.ylabel("Features")
+plt.show()
+
+# ----------------------------------------
+# Box Plot AFTER Removing Outliers
+# ----------------------------------------
+plt.figure(figsize=(10, 5))
+sns.boxplot(data=clean_data, orient='h', palette='Set3')
+plt.title("Box Plot - After Removing Outliers")
+plt.xlabel("Values")
+plt.ylabel("Features")
+plt.show()
+
 # Convert cleaned NumPy data back to DataFrame for seaborn
 clean_df = pd.DataFrame(clean_data, columns=['Open', 'High', 'Low', 'Close', 'Volume'])
 
