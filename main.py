@@ -14,14 +14,16 @@ print(df.info()) # check the information of the data set
 df['Date'] = pd.to_datetime(df['Date'])
 
 # -----------------------------
-# 1. Data Cleaning
+#  Data Cleaning
 # -----------------------------
-
 # convert dataframe into Numpy array 
 data = df[['Open', 'High', 'Low', 'Close', 'Volume']].to_numpy()
 # fill missing values with 0
 df.fillna(0,inplace=True)
 
+# -------------------------------
+# Detect outliers using Iqr method
+# ------------------------------- 
 def detect_outliers_iqr_np(data_np, feature_names=None):
  
     Q1 = np.percentile(data_np, 25, axis=0)
@@ -66,7 +68,7 @@ clean_data = Iqr(data)
 # Convert clean_data back to a DataFrame
 clean_df = pd.DataFrame(clean_data, columns=['Open', 'High', 'Low', 'Close', 'Volume'])
 
- # -----------------------------
+# -----------------------------
 #  Summary Statistics 
 # -----------------------------
 print(clean_df.describe())
@@ -85,5 +87,45 @@ plt.pie(sizes, labels=labels, autopct='%1.1f%%', colors=['Orange','Red'], starta
 plt.title('Outliers vs Non-Outliers')
 plt.axis('equal')
 plt.show()
+
+# Convert cleaned NumPy data back to DataFrame for seaborn
+clean_df = pd.DataFrame(clean_data, columns=['Open', 'High', 'Low', 'Close', 'Volume'])
+
+# Correlation Heatmap
+plt.figure(figsize=(6, 5))
+sns.heatmap(clean_df.corr(), annot=True, cmap='coolwarm', fmt=".2f")
+plt.title("Correlation Heatmap")
+plt.show()
+
+# Line Plot – Close Price Over Time
+plt.figure(figsize=(10, 5))
+plt.plot(df['Date'][:len(clean_data)], clean_data[:, 3])  # Close prices
+plt.title("Close Price Over Time (No Outliers)")
+plt.xlabel("Date")
+plt.ylabel("Close Price")
+plt.grid(True)
+plt.show()
+
+# Distribution plot of Close Price
+plt.figure(figsize=(8, 4))
+sns.histplot(clean_df['Close'], kde=True, color='skyblue')
+plt.title("Distribution of Close Prices")
+plt.xlabel("Close Price")
+plt.ylabel("Frequency")
+plt.grid(True)
+plt.show()
+
+# Distribution plots
+numeric_cols = clean_df.select_dtypes(include=np.number).columns
+
+for col in numeric_cols:
+    plt.figure(figsize=(7, 4))
+    sns.histplot(clean_df[col], kde=True, bins=30, color='steelblue')
+    plt.title(f'Distribution of {col}')
+    plt.xlabel(col)
+    plt.ylabel("Frequency")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
 
 
