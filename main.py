@@ -19,7 +19,7 @@ df['Date'] = pd.to_datetime(df['Date'])
 # convert dataframe into Numpy array 
 data = df[['Open', 'High', 'Low', 'Close', 'Volume']].to_numpy()
 # fill missing values with 0
-df.fillna(0,inplace=True)
+df.fillna(df.mean(), inplace=True)
 
 # -------------------------------
 # Detect outliers using Iqr method
